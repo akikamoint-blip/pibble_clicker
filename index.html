@@ -1,4 +1,3 @@
-cat << 'EOF' > spend_budget/spend.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,18 +5,29 @@ cat << 'EOF' > spend_budget/spend.html
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pibble Clicker - Aki.fun</title>
     <style>
-        body { background: #0c0c0e; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 20px; margin: 0; }
+        body { 
+            background: url("bg_peach.jpg") repeat center center fixed; 
+            background-size: auto; 
+            color: white; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            text-align: center; 
+            padding: 20px; 
+            margin: 0; 
+        }
+        .nav-back { position: absolute; top: 20px; left: 20px; background: rgba(39, 39, 42, 0.9); border: none; color: #fff; padding: 8px 15px; border-radius: 6px; cursor: pointer; text-decoration: none; font-weight: bold; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .nav-back:hover { background: #3f3f46; }
         
         .clicker-container { display: flex; justify-content: center; align-items: center; gap: 50px; flex-wrap: wrap; margin-top: 60px; max-width: 1000px; margin-left: auto; margin-right: auto; }
         
         .clicker-left { flex: 1; min-width: 300px; display: flex; flex-direction: column; align-items: center; }
-        .score-counter { font-size: 2.5rem; font-weight: 900; color: #ffcc00; margin: 0; }
-        .gps-counter { color: #a1a1aa; font-size: 1.1rem; margin: 5px 0 20px 0; }
+        .score-counter { font-size: 3rem; font-weight: 900; color: #fff; text-shadow: 0 4px 12px rgba(0,0,0,0.7); margin: 0; }
+        .gps-counter { color: #fff; font-size: 1.2rem; font-weight: bold; text-shadow: 0 2px 8px rgba(0,0,0,0.7); margin: 5px 0 20px 0; }
         
-        .pibble-frame { width: 280px; height: 280px; border-radius: 50%; background: #18181b; border: 6px solid #27272a; display: flex; justify-content: center; align-items: center; cursor: pointer; overflow: hidden; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: transform 0.05s ease; user-select: none; }
+        .pibble-frame { width: 280px; height: 280px; border-radius: 50%; background: #18181b; border: 6px solid #fff; display: flex; justify-content: center; align-items: center; cursor: pointer; overflow: hidden; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.6); transition: transform 0.05s ease; user-select: none; }
         .pibble-frame:active { transform: scale(0.95); border-color: #ffcc00; }
+        .pibble-frame img { width: 100%; height: 100%; object-fit: cover; }
         
-        .shop-panel { width: 340px; background: #18181b; border: 2px solid #27272a; border-radius: 16px; padding: 20px; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .shop-panel { width: 340px; background: rgba(24, 24, 27, 0.95); border: 2px solid #27272a; border-radius: 16px; padding: 20px; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.6); }
         .shop-title { margin-top: 0; color: #ffcc00; border-bottom: 2px solid #27272a; padding-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
         
         .upgrade-row { display: flex; justify-content: space-between; align-items: center; background: #27272a; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid transparent; transition: border-color 0.2s; }
@@ -29,12 +39,14 @@ cat << 'EOF' > spend_budget/spend.html
         .buy-btn { background: #ffcc00; border: none; color: black; padding: 8px 12px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 13px; min-width: 80px; text-align: center; }
         .buy-btn:disabled { background: #444; color: #777; cursor: not-allowed; }
         
-        footer { margin-top: 60px; color: #52525b; font-size: 14px; font-weight: bold; }
+        footer { margin-top: 60px; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.8); font-size: 14px; font-weight: bold; }
     </style>
 </head>
 <body>
+
+    <a href="https://aki.fun" id="hub-link" class="nav-back">⬅ Portal Hub</a>
     
-    <h1 style="margin-top:40px; font-size: 2.5rem; text-transform: uppercase; letter-spacing: 1px;">🐶 Pibble Clicker 🐶</h1>
+    <h1 style="margin-top:20px; font-size: 3rem; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 4px 10px rgba(0,0,0,0.7);">🐶 Pibble Clicker 🐶</h1>
 
     <div class="clicker-container">
         <div class="clicker-left">
@@ -42,7 +54,7 @@ cat << 'EOF' > spend_budget/spend.html
             <div class="gps-counter" id="scrub-rate">0 scratches per second (SPS)</div>
             
             <div class="pibble-frame" onclick="triggerBellyScratch()">
-                <img src="pibble.jpg" alt="I am pibble wash ma belly" style="width: 100%; height: 100%; object-fit: cover;">
+                <img src="pibble.jpg" alt="I am pibble wash ma belly">
             </div>
         </div>
 
@@ -158,4 +170,3 @@ cat << 'EOF' > spend_budget/spend.html
     </script>
 </body>
 </html>
-EOF
