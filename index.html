@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pibble Clicker - Aki.fun</title>
+    <style>
+        body { background: #0c0c0e; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 20px; margin: 0; }
+        .nav-back { position: absolute; top: 20px; left: 20px; background: #27272a; border: none; color: #fff; padding: 8px 15px; border-radius: 6px; cursor: pointer; text-decoration: none; font-weight: bold; font-size: 14px; }
+        
+        .clicker-container { display: flex; justify-content: center; align-items: center; gap: 50px; flex-wrap: wrap; margin-top: 60px; max-width: 1000px; margin-left: auto; margin-right: auto; }
+        
+        .clicker-left { flex: 1; min-width: 300px; display: flex; flex-direction: column; align-items: center; }
+        .score-counter { font-size: 2.5rem; font-weight: 900; color: #ffcc00; margin: 0; }
+        .gps-counter { color: #a1a1aa; font-size: 1.1rem; margin: 5px 0 20px 0; }
+        
+        .pibble-frame { width: 280px; height: 280px; border-radius: 50%; background: #18181b; border: 6px solid #27272a; display: flex; justify-content: center; align-items: center; cursor: pointer; overflow: hidden; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: transform 0.05s ease; user-select: none; }
+        .pibble-frame:active { transform: scale(0.95); border-color: #ffcc00; }
+        
+        .pibble-img-placeholder { font-size: 1.2rem; font-weight: bold; text-align: center; color: #71717a; padding: 20px; line-height: 1.4; }
+        .pibble-img-placeholder span { display: block; font-size: 3rem; margin-top: 10px; }
+        
+        .shop-panel { width: 340px; background: #18181b; border: 2px solid #27272a; border-radius: 16px; padding: 20px; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .shop-title { margin-top: 0; color: #ffcc00; border-bottom: 2px solid #27272a; padding-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .upgrade-row { display: flex; justify-content: space-between; align-items: center; background: #27272a; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid transparent; transition: border-color 0.2s; }
+        .upgrade-row:hover { border-color: #ffcc00; }
+        .upgrade-info { flex: 1; padding-right: 10px; }
+        .upgrade-name { font-weight: bold; font-size: 14px; margin: 0; }
+        .upgrade-effect { font-size: 11px; color: #a1a1aa; margin: 2px 0 0 0; }
+        
+        .buy-btn { background: #ffcc00; border: none; color: black; padding: 8px 12px; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 13px; min-width: 80px; text-align: center; }
+        .buy-btn:disabled { background: #444; color: #777; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+    <a href="/" class="nav-back">⬅ Portal Hub</a>
+    
+    <h1 style="margin-top:20px; font-size: 2.5rem; text-transform: uppercase; letter-spacing: 1px;">🐶 Pibble Clicker 🐶</h1>
+
+    <div class="clicker-container">
+        
+        <div class="clicker-left">
+            <h2 class="score-counter" id="total-scratches">0 Bellys</h2>
+            <div class="gps-counter" id="scrub-rate">0 scratches per second (SPS)</div>
+            
+            <div class="pibble-frame" onclick="triggerBellyScratch()">
+                <div class="pibble-img-placeholder">
+                    "I am pibble wash ma belly"
+                    <span>🐕</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="shop-panel">
+            <h3 class="shop-title">🔧 Scrub Store</h3>
+            <div id="shop-target">
+                <!-- Javascript Injection -->
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // UPGRADES SCHEMA DEFINITION
+        const upgradeRegistry = [
+            { name: "Soft Hand Brushes", baseCost: 15, costMultiplier: 1.15, spsValue: 0.1, desc: "Light grooming tickles." },
+            { name: "Automatic Scratch Mittens", baseCost: 100, costMultiplier: 1.15, spsValue: 1, desc: "Consistent scratch distribution." },
+            { name: "Industrial Belly Roller", baseCost: 1100, costMultiplier: 1.15, spsValue: 8, desc: "Heavy-duty full body massage mechanics." },
+            { name: "Sausage Treats Payout", baseCost: 12000, costMultiplier: 1.15, spsValue: 47, desc: "Increases passive cooperation metrics." }
+        ];
+
+        // CLIENT RETRIEVAL SYSTEM FIX
+        // Sets array trackers to [0, 0, 0, 0] if there's no existing save file profile found
+        let gameData = JSON.parse(localStorage.getItem('pibble_clicker_save')) || {
+            scratches: 0,
+            totalSps: 0,
+            clickValue: 1,
+            upgradesOwned: new Array(upgradeRegistry.length).fill(0)
+        };
+
+        // BUG FIX: Double checks if upgradesOwned array length matches registry just in case
+        if (!gameData.upgradesOwned || gameData.upgradesOwned.length !== upgradeRegistry.length) {
+            gameData.upgradesOwned = new Array(upgradeRegistry.length).fill(0);
+        }
+
+        function saveGame() {
+            localStorage.setItem('pibble_clicker_save', JSON.stringify(gameData));
+        }
+
+        function triggerBellyScratch() {
+            gameData.scratches += gameData.clickValue;
+            updateInterfaceText();
+            saveGame();
+        }
+
+        function calculateSps() {
+            let total = 0;
+            upgradeRegistry.forEach((item, index) => {
+                total += gameData.upgradesOwned[index] * item.spsValue;
+            });
+            gameData.totalSps = parseFloat(total.toFixed(1));
+            document.getElementById('scrub-rate').innerText = `${gameData.totalSps} scratches per second (SPS)`;
+        }
+
+        function getUpgradeCurrentCost(index) {
+            const upgrade = upgradeRegistry[index];
+            const quantity = gameData.upgradesOwned[index];
+            return Math.floor(upgrade.baseCost * Math.pow(upgrade.costMultiplier, quantity));
+        }
+
+        function purchaseUpgrade(index) {
+            const currentCost = getUpgradeCurrentCost(index);
+            if (gameData.scratches >= currentCost) {
+                gameData.scratches -= currentCost;
+                gameData.upgradesOwned[index] += 1;
+                
+                calculateSps();
+                renderShopGrid();
+                updateInterfaceText();
+                saveGame();
+            }
+        }
+
+        function renderShopGrid() {
+            const target = document.getElementById('shop-target');
+            target.innerHTML = "";
+
+            upgradeRegistry.forEach((item, index) => {
+                const cost = getUpgradeCurrentCost(index);
+                const count = gameData.upgradesOwned[index];
+                const canAfford = gameData.scratches >= cost;
+
+                target.innerHTML += `
+                    <div class="upgrade-row">
+                        <div class="upgrade-info">
+                            <p class="upgrade-name">${item.name} (${count})</p>
+                            <p class="upgrade-effect">+${item.spsValue} SPS • <em>${item.desc}</em></p>
+                        </div>
+                        <button class="buy-btn" id="buy-btn-${index}" onclick="purchaseUpgrade(${index})" ${!canAfford ? 'disabled' : ''}>
+                            ${cost} PTS
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function updateInterfaceText() {
+            document.getElementById('total-scratches').innerText = `${Math.floor(gameData.scratches)} Bellys`;
+            
+            upgradeRegistry.forEach((item, index) => {
+                const cost = getUpgradeCurrentCost(index);
+                const btn = document.getElementById(`buy-btn-${index}`);
+                if (btn) {
+                    btn.disabled = gameData.scratches < cost;
+                }
+            });
+        }
+
+        // Ticks 10 times per second
+        setInterval(() => {
+            if (gameData.totalSps > 0) {
+                gameData.scratches += (gameData.totalSps / 10);
+                updateInterfaceText();
+            }
+        }, 100);
+
+        // Auto-save routine interval running every 10 seconds
+        setInterval(saveGame, 10000);
+
+        // Initialize setup
+        calculateSps();
+        renderShopGrid();
+        updateInterfaceText();
+    </script>
+</body>
+</html>
