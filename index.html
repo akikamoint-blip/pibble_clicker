@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pibble Clicker</title>
+    <title>Pibble Clicker - Aki.fun</title>
     <style>
         body { 
             background: url("bg_peach.jpg") repeat center center fixed; 
@@ -65,11 +65,10 @@
 </head>
 <body>
     
-    <h1 style="margin-top:20px; font-size: 3rem; text-transform: uppercase; letter-spacing: 1px; color: white; text-shadow: 0 4px 12px rgba(0,0,0,0.9);">🏆 Pibble Clicker 🏆</h1>
+    <h1 style="margin-top:20px; font-size: 3rem; text-transform: uppercase; letter-spacing: 1px; color: white; text-shadow: 0 4px 12px rgba(0,0,0,0.9);">❤️ Pibble Clicker ❤️</h1>
 
     <div class="clicker-container">
         <div class="stats-panel">
-            <!-- UPDATED STATIC PLACEHOLDER TO RUBS -->
             <h2 class="score-counter" id="total-scratches">0 Rubs</h2>
             <div class="gps-counter" id="scrub-rate">0 rubs per second (RPS)</div>
             
@@ -79,12 +78,10 @@
         </div>
 
         <div class="shop-panel">
-            <h3 class="shop-title">🔧 Scrub Store</h3>
+            <h3 class="shop-title">🧽 Scrub Store</h3>
             <div id="shop-target"></div>
         </div>
     </div>
-
-    <footer>Designed by Aki with the help of his parents (mostly me tho)</footer>
 
     <script>
         const upgradeRegistry = [
@@ -94,15 +91,27 @@
             { name: "Sausage Treats Payout", baseCost: 12000, costMultiplier: 1.15, spsValue: 47, desc: "Increases passive cooperation metrics." }
         ];
 
-        let gameData = JSON.parse(localStorage.getItem('pibble_clicker_save')) || {
+        // FORCED CONVERSION MAP: Converts old "scratches" storage variables cleanly to fresh "rubs"
+        let savedData = localStorage.getItem('pibble_clicker_save');
+        let gameData = {
             scratches: 0,
             totalSps: 0,
             clickValue: 1,
             upgradesOwned: new Array(upgradeRegistry.length).fill(0)
         };
 
-        if (!gameData.upgradesOwned || gameData.upgradesOwned.length !== upgradeRegistry.length) {
-            gameData.upgradesOwned = new Array(upgradeRegistry.length).fill(0);
+        if (savedData) {
+            try {
+                let parsed = JSON.parse(savedData);
+                // Automatically carries your high score points over safely!
+                gameData.scratches = parsed.scratches || parsed.rubs || 0;
+                gameData.clickValue = parsed.clickValue || 1;
+                if (parsed.upgradesOwned && parsed.upgradesOwned.length === upgradeRegistry.length) {
+                    gameData.upgradesOwned = parsed.upgradesOwned;
+                }
+            } catch(e) {
+                console.log("Memory reset triggered");
+            }
         }
 
         function saveGame() {
@@ -121,7 +130,6 @@
                 total += gameData.upgradesOwned[index] * item.spsValue;
             });
             gameData.totalSps = parseFloat(total.toFixed(1));
-            // FIXED LABEL CHANGE FROM SPS TO RPS
             document.getElementById('scrub-rate').innerText = `${gameData.totalSps} rubs per second (RPS)`;
         }
 
@@ -157,7 +165,6 @@
                     <div class="upgrade-row">
                         <div class="upgrade-info">
                             <p class="upgrade-name">${item.name} (${count})</p>
-                            <!-- FIXED LABEL CHANGE FROM SPS TO RPS -->
                             <p class="upgrade-effect">+${item.spsValue} RPS • <em>${item.desc}</em></p>
                         </div>
                         <button class="buy-btn" id="buy-btn-${index}" onclick="purchaseUpgrade(${index})" ${!canAfford ? 'disabled' : ''}>
@@ -169,10 +176,9 @@
         }
 
         function updateInterfaceText() {
-            // FIXED DISPLAY READOUT LOGIC STRINGS TO SHOW RUBS/RUB
-            const currentScratches = Math.floor(gameData.scratches);
-            const labelText = currentScratches === 1 ? "Rub" : "Rubs";
-            document.getElementById('total-scratches').innerText = `${currentScratches} ${labelText}`;
+            const currentRubs = Math.floor(gameData.scratches);
+            const labelText = currentRubs === 1 ? "Rub" : "Rubs";
+            document.getElementById('total-scratches').innerText = `${currentRubs} ${labelText}`;
             
             upgradeRegistry.forEach((item, index) => {
                 const cost = getUpgradeCurrentCost(index);
@@ -196,3 +202,4 @@
     </script>
 </body>
 </html>
+
