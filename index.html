@@ -104,7 +104,7 @@
             <div id="shop-target"></div>
         </div>
     </div>
-
+    
     <script>
         const upgradeRegistry = [
             { name: "Soft Hand Brushes", baseCost: 15, costMultiplier: 1.15, spsValue: 0.1, desc: "Light grooming tickles." },
@@ -158,6 +158,134 @@
             const quantity = gameData.upgradesOwned[index];
             return Math.floor(upgrade.baseCost * Math.pow(upgrade.costMultiplier, quantity));
         }
+
+        function purchaseUpgrade(index) {
+            const currentCost = getUpgradeCurrentCost(index);
+            if (gameData.scratches >= currentCost) {
+                gameData.scratches -= currentCost;
+                gameData.upgradesOwned[index] += 1;
+                
+                calculateSps();
+                renderShopGrid();
+                updateInterfaceText();
+                saveGame();
+            }
+        }
+
+        function renderShopGrid() {
+            const target = document.getElementById('shop-target');
+            target.innerHTML = "";
+
+            upgradeRegistry.forEach((item, index) => {
+                const cost = getUpgradeCurrentCost(index);
+                const count = gameData.upgradesOwned[index];
+                const canAfford = gameData.scratches >= cost;
+
+                target.innerHTML += `
+                    <div class="upgrade-row">
+                        <div class="upgrade-info">
+                            <p class="upgrade-name">${item.name} (${count})</p>
+                            <p class="upgrade-effect">+${item.spsValue} RPS • <em>${item.desc}</em></p>
+                        </div>
+                        <button class="buy-btn" id="buy-btn-${index}" onclick="purchaseUpgrade(${index})" ${!canAfford ? 'disabled' : ''}>
+                            ${cost} PTS
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function updateInterfaceText() {
+            const currentRubs = Math.floor(gameData.scratches);
+            const labelText = currentRubs === 1 ? "Rub" : "Rubs";
+            document.getElementById('total-scratches').innerText = `${currentRubs} ${labelText}`;
+            
+            upgradeRegistry.forEach((item, index) => {
+                const cost = getUpgradeCurrentCost(index);
+                const btn = document.getElementById(`buy-btn-${index}`);
+                if (btn) btn.disabled = gameData.scratches < cost;
+            });
+        }
+
+        // --- AUDIO ENGINE BACKGROUND CONTROLLER ---
+        let audioActive = false;
+        function toggleAudioEngine() {
+            const player = document.getElementById('bg-audio-player');
+            const btn = document.getElementById('music-toggle-btn');
+            if(!player || !btn) return;
+
+            if (!audioActive) {
+                player.src = "prettyjohn1-background-music-505061.mp3";
+                player.load();
+                player.play().then(() => {
+                    btn.innerText = "🎵 Music: ON";
+                    btn.style.borderColor = "#22c55e";
+                    btn.style.color = "#22c55e";
+                    audioActive = true;
+                }).catch(err => {
+                    console.log("Audio load error:", err);
+                    alert("Tap the puppy first, then try the music button!");
+                });
+                return;
+            } else {
+                player.pause();
+                btn.innerText = "🎵 Music: OFF";
+                btn.style.borderColor = "#ffcc00";
+                btn.style.color = "#ffcc00";
+                audioActive = false;
+            }
+        }
+
+        // --- CHEAT ENGINE CODE MONITOR ---
+        let keySequenceBuffer = "";
+        const masterPasscode = "sigmarizz";
+
+        window.addEventListener('keydown', (e) => {
+            keySequenceBuffer += e.key.toLowerCase();
+            if (keySequenceBuffer.length > masterPasscode.length) {
+                keySequenceBuffer = keySequenceBuffer.slice(-masterPasscode.length);
+            }
+            if (keySequenceBuffer === masterPasscode) {
+                keySequenceBuffer = "";
+                toggleAdminView(true);
+            }
+        });
+
+        function toggleAdminView(show) {
+            const overlay = document.getElementById('admin-panel-overlay');
+            if(overlay) overlay.style.display = show ? 'flex' : 'none';
+        }
+
+        // --- DEV INTERFACE COMMAND CALLBACKS ---
+        function adminGivePoints(amount) {
+            gameData.scratches += amount;
+            updateInterfaceText();
+            saveGame();
+        }
+
+        function adminResetScore() {
+            if(confirm("Completely wipe your puppy scores?")) {
+                localStorage.removeItem('pibble_clicker_save');
+                location.reload();
+            }
+        }
+
+        setInterval(() => {
+            if (gameData.totalSps > 0) {
+                gameData.scratches += (gameData.totalSps / 10);
+                updateInterfaceText();
+            }
+        }, 100);
+
+        setInterval(saveGame, 5000);
+
+        calculateSps();
+        renderShopGrid();
+        updateInterfaceText();
+    </script>
+</body>
+</html>
+
 
         function purchaseUpgrade(index) {
             const currentCost = getUpgradeCurrentCost(index);
