@@ -68,7 +68,7 @@
     <!-- REAL-TIME BACKGROUND MUSIC AUDIO PLAYBACK ELEMENT -->
     <audio id="bg-audio-player" src="desifreemusic-bouncy-soul-269874.mp3" loop></audio>
 
-    <!-- MUSIC TOGGLE INTERFACE NAVIGATION OVERLAY CONTROL -->
+    <!-- MUSIC TOGGLE INTERFACE OVERLAY CONTROL -->
     <button id="music-toggle-btn" onclick="toggleAudioEngine()" style="position: absolute; top: 10px; right: 10px; background: rgba(24,24,27,0.9); border: 2px solid #ffcc00; color: #ffcc00; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; z-index: 10;">🎵 Music: OFF</button>
 
     <!-- HIDDEN ADULT SECURITY ADMINISTRATIVE CONSOLE LAYOUT CARD -->
@@ -104,7 +104,9 @@
             <div id="shop-target"></div>
         </div>
     </div>
-    
+
+    <footer>Designed by Aki with the help of his parents (mostly me tho)</footer>
+
     <script>
         const upgradeRegistry = [
             { name: "Soft Hand Brushes", baseCost: 15, costMultiplier: 1.15, spsValue: 0.1, desc: "Light grooming tickles." },
@@ -175,6 +177,10 @@
         function renderShopGrid() {
             const target = document.getElementById('shop-target');
             target.innerHTML = "";
+
+            upgradeRegistry.forEach((item, index) => {
+                const cost = getUpgradeCurrentCost(index);
+                const count = gameData.upgradesOwned[index];
                 const canAfford = gameData.scratches >= cost;
 
                 target.innerHTML += `
@@ -227,7 +233,7 @@
 
         // --- CHEAT ENGINE CODE MONITOR ---
         let keySequenceBuffer = "";
-        const masterPasscode = "sigmarizz";
+        const masterPasscode = "dev123";
 
         window.addEventListener('keydown', (e) => {
             keySequenceBuffer += e.key.toLowerCase();
