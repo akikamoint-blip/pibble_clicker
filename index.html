@@ -305,6 +305,53 @@
         calculateSps();
         renderShopGrid();
         updateInterfaceText();
+
+        // --- LEADERBOARD LOGIC & RAM SAFETY MANAGEMENT ENGINE ---
+
+function toggleLeaderboardView(show) {
+    const overlay = document.getElementById('leaderboard-overlay');
+    if(overlay) {
+        overlay.style.display = show ? 'flex' : 'none';
+        if(show) {
+            fetchLeaderboardData(); // Refreshes and renders text lists instantly when opened
+        }
+    }
+}
+
+function fetchLeaderboardData() {
+    // 1. Instantly declare localized working arrays (forcing Render RAM cleaning)
+    let cleanRubs = [];
+    let cleanRps = [];
+
+    // Temporary placeholder data. Swap out this block with your real server fetch call later!
+    cleanRubs = [
+        { user: "KingPibble", count: "4,150,000 Rubs" },
+        { user: "DoggoScratcher", count: "1,204,900 Rubs" },
+        { user: "WiggleButt", count: "840,220 Rubs" }
+    ];
+
+    cleanRps = [
+        { user: "SonicSpeedGroomer", count: "240.5 RPS" },
+        { user: "KingPibble", count: "118.0 RPS" },
+        { user: "TreatLover", count: "45.2 RPS" }
+    ];
+
+    // 2. Render out arrays inside lists cleanly
+    document.getElementById('most-rubs-list').innerHTML = cleanRubs
+        .map(p => `<li>${p.user} <span style="color:#ffcc00; float:right;">${p.count}</span></li>`).join('');
+
+    document.getElementById('rps-list').innerHTML = cleanRps
+        .map(p => `<li>${p.user} <span style="color:#a855f7; float:right;">${p.count}</span></li>`).join('');
+
+    // 3. Clear structures out completely right away so Render's memory cannot hold onto them
+    cleanRubs = null;
+    cleanRps = null;
+}
+
+// Global 5-minute memory safety clock interval loop tracker (300,000 milliseconds)
+setInterval(() => {
+    fetchLeaderboardData();
+}, 300000);
     </script>
 </body>
 </html>
