@@ -68,8 +68,31 @@
     <!-- REAL-TIME BACKGROUND MUSIC AUDIO PLAYBACK ELEMENT -->
     <audio id="bg-audio-player" src="desifreemusic-bouncy-soul-269874.mp3" loop></audio>
 
-    <!-- MUSIC TOGGLE INTERFACE OVERLAY CONTROL -->
+    <!-- INTERFACE ENGINE OVERLAY CONTROLS (MUSIC & LEADERBOARD) -->
     <button id="music-toggle-btn" onclick="toggleAudioEngine()" style="position: absolute; top: 10px; right: 10px; background: rgba(24,24,27,0.9); border: 2px solid #ffcc00; color: #ffcc00; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; z-index: 10;">🎵 Music: OFF</button>
+    <button id="leaderboard-toggle-btn" onclick="toggleLeaderboardView(true)" style="position: absolute; top: 10px; right: 125px; background: rgba(24,24,27,0.9); border: 2px solid #ffcc00; color: #ffcc00; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; z-index: 10;">🏆 Leaderboard</button>
+
+    <!-- GLOBAL STANDINGS LEADERBOARD MODAL POPUP (SPLIT SIDE-BY-SIDE VIEW) -->
+    <div id="leaderboard-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999; display: none; align-items: center; justify-content: center; box-sizing: border-box; padding: 20px;">
+        <div style="background: #18181b; border: 3px solid #ffcc00; padding: 25px; border-radius: 16px; width: 620px; max-width: 95%; text-align: center; box-shadow: 0 0 25px rgba(255,204,0,0.3);">
+            <h2 style="color: #ffcc00; margin-top: 0; text-transform: uppercase; font-size: 1.4rem; border-bottom: 2px solid #27272a; padding-bottom: 8px;">🏆 Pibble Global Standings</h2>
+            
+            <div style="display: flex; gap: 15px; margin-top: 20px; justify-content: space-between; flex-wrap: wrap;">
+                <!-- Left Board: Total Rubs -->
+                <div style="flex: 1; min-width: 250px; background: #27272a; padding: 15px; border-radius: 8px; border: 1px solid #3f3f46;">
+                    <h3 style="color: #ffcc00; margin-top: 0; font-size: 1.05rem; border-bottom: 1px solid #3f3f46; padding-bottom: 5px;">🪙 Most Rubs</h3>
+                    <ol id="most-rubs-list" style="text-align: left; padding-left: 20px; color: #e4e4e7; line-height: 1.8; font-size: 13px; font-weight: bold; margin-bottom: 0;"></ol>
+                </div>
+                <!-- Right Board: Rubs Per Second -->
+                <div style="flex: 1; min-width: 250px; background: #27272a; padding: 15px; border-radius: 8px; border: 1px solid #3f3f46;">
+                    <h3 style="color: #ffcc00; margin-top: 0; font-size: 1.05rem; border-bottom: 1px solid #3f3f46; padding-bottom: 5px;">⚡ Rubs Per Second</h3>
+                    <ol id="rps-list" style="text-align: left; padding-left: 20px; color: #e4e4e7; line-height: 1.8; font-size: 13px; font-weight: bold; margin-bottom: 0;"></ol>
+                </div>
+            </div>
+            <p style="font-size: 10px; color: #a1a1aa; margin-top: 15px; margin-bottom: 0;">🔄 Data purges and refreshes every 5 minutes for performance stability.</p>
+            <button onclick="toggleLeaderboardView(false)" style="background: #ef4444; border: none; color: white; width: 100px; padding: 8px; font-weight: bold; margin-top: 15px; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-size: 11px;">Close</button>
+        </div>
+    </div>
 
     <!-- HIDDEN ADULT SECURITY ADMINISTRATIVE CONSOLE LAYOUT CARD -->
     <div id="admin-panel-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999; display: none; align-items: center; justify-content: center; box-sizing: border-box;">
