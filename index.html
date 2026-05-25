@@ -199,6 +199,74 @@
         calculateSps();
         renderShopGrid();
         updateInterfaceText();
+                // --- ADULT DEVELOPER AUDIO ENGINE CONTROLLERS ---
+        let audioActive = false;
+        function toggleAudioEngine() {
+            const player = document.getElementById('bg-audio-player');
+            const btn = document.getElementById('music-toggle-btn');
+            if(!player || !btn) return;
+
+            if (!audioActive) {
+                // Point source directory to your custom Pixabay asset filename
+                player.src = "assets/desifreemusic-bouncy-soul-269874.mp3";
+                player.play().catch(err => console.log("Interaction required first"));
+                btn.innerText = "🎵 Music: ON";
+                btn.style.borderColor = "#22c55e";
+                btn.style.color = "#22c55e";
+                audioActive = true;
+            } else {
+                player.pause();
+                btn.innerText = "🎵 Music: OFF";
+                btn.style.borderColor = "#ffcc00";
+                btn.style.color = "#ffcc00";
+                audioActive = false;
+            }
+        }
+
+        // --- SECRET CHEAT CODE KEYBOARD TRACKER SYSTEM ---
+        let secretKeyBuffer = "";
+        const masterPasscode = "sigmarizz";
+
+        window.addEventListener('keydown', (e) => {
+            if (!gameActive) return;
+            
+            // Add lowercase key char values onto structural verification tracking string arrays
+            secretKeyBuffer += e.key.toLowerCase();
+            
+            // Slice tracker string lengths to match security constraints layout rules safely
+            if (secretKeyBuffer.length > masterPasscode.length) {
+                secretKeyBuffer = secretKeyBuffer.slice(-masterPasscode.length);
+            }
+            
+            // Trigger interface toggle events if string entries authenticate successfully
+            if (secretKeyBuffer === masterPasscode) {
+                secretKeyBuffer = ""; // Flush registry instantly
+                toggleAdminView(true);
+            }
+        });
+
+        function toggleAdminView(show) {
+            const overlay = document.getElementById('admin-panel-overlay');
+            if(overlay) overlay.style.display = show ? 'flex' : 'none';
+        }
+
+        // --- DEV CONSOLE CHEAT PACK COMMAND FUNCTIONS ---
+        function adminGiveElixir() {
+            playerRizzlixer = 10;
+            document.getElementById('ticker').innerText = "⚡ Dev Cheat Activated: Filled Rizzlixer to 10 Max!";
+        }
+
+        function adminInstaKillBot() {
+            towerHP["bot-left"] = 0;
+            towerHP["bot-right"] = 0;
+            towerHP["bot-king"] = 0;
+            checkTowerCondition("bot-left");
+            checkTowerCondition("bot-right");
+            checkTowerCondition("bot-king");
+            document.getElementById('ticker').innerText = "💥 Dev Cheat Activated: Enemy bases nuked completely!";
+            toggleAdminView(false);
+        }
+
     </script>
 </body>
 </html>
