@@ -365,22 +365,6 @@ setInterval(() => {
     fetchLeaderboardData();
 }, 300000);
 
-// --- GOOGLE SIGN IN PROGRESS TRACKER ---
-let playerProfile = null;
-
-function handleCredentialResponse(response) {
-    const token = response.credential;
-    
-    // Decode the token right in the browser to read their name safely
-    const payload = JSON.parse(atob(token.split('.')));
-    const playerEmail = payload.email;
-    const playerName = payload.name;
-
-    console.log("Logged in profile email:", playerEmail);
-    console.log("Logged in profile name:", playerName);
-
-    alert(`Welcome to Pibble Clicker, ${playerName}!`);
-    document.querySelector('h1').innerText = `❤️ ${playerName}'s Pibble Clicker ❤️`;
         // --- GOOGLE SIGN IN PROGRESS TRACKER ---
         let playerProfile = null;
 
