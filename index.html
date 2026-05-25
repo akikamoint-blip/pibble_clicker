@@ -331,6 +331,9 @@ function toggleLeaderboardView(show) {
     }
 }
 
+let keySequenceBuffer = "";
+const masterPasscode = "wpibble";
+
 function fetchLeaderboardData() {
     // 1. Instantly declare localized working arrays (forcing Render RAM cleaning)
     let cleanRubs = [];
@@ -368,8 +371,7 @@ setInterval(() => {
 
         // --- GOOGLE SIGN IN PROGRESS TRACKER ---
         let playerProfile = null;
-        let keySequenceBuffer = "";
-        const masterPasscode = "wpibble";
+        
         function handleCredentialResponse(response) {
             const token = response.credential;
             const payload = JSON.parse(atob(token.split('.')));
