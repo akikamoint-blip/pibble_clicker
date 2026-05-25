@@ -275,9 +275,6 @@
                 audioActive = false;
             }
         }
-        
-        let keySequenceBuffer = "";
-        const masterPasscode = "kaylindih";
 
         window.addEventListener('keydown', (e) => {
             keySequenceBuffer += e.key.toLowerCase();
@@ -371,7 +368,8 @@ setInterval(() => {
 
         // --- GOOGLE SIGN IN PROGRESS TRACKER ---
         let playerProfile = null;
-
+        let keySequenceBuffer = "";
+        const masterPasscode = "Wpibble";
         function handleCredentialResponse(response) {
             const token = response.credential;
             const payload = JSON.parse(atob(token.split('.')));
