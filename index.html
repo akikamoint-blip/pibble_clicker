@@ -214,9 +214,21 @@
             const btn = document.getElementById('music-toggle-btn');
             if(!player || !btn) return;
 
-            if (!audioActive) {
-                player.play().catch(err => console.log("Interaction lock hit"));
-                btn.innerText = "🎵 Music: ON";
+if (!audioActive) {
+    player.src = "desifreemusic-bouncy-soul-269874.mp3";
+    player.load();
+    player.play().then(() => {
+        btn.innerText = "🎵 Music: ON";
+        btn.style.borderColor = "#22c55e";
+        btn.style.color = "#22c55e";
+        audioActive = true;
+    }).catch(err => {
+        console.log("Audio load error:", err);
+        alert("Tap the puppy first, then try the music button!");
+    });
+    return;
+}
+
                 btn.style.borderColor = "#22c55e";
                 btn.style.color = "#22c55e";
                 audioActive = true;
